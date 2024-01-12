@@ -1,3 +1,6 @@
+import { useState } from "react";
+
+import { Oval } from "react-loader-spinner";
 import { NewspaperIcon } from "@heroicons/react/24/solid"
 import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -8,8 +11,6 @@ import { InputComponent } from "Components/InputComponent";
 import { routes } from "Config/routes";
 
 import { register } from "Service/AuthService";
-import { useState } from "react";
-import { Oval } from "react-loader-spinner";
 
 
 export const RegisterPage = (): JSX.Element => {
@@ -30,7 +31,7 @@ export const RegisterPage = (): JSX.Element => {
   });
 
 
-  const onSubmit = async (values: MailSignIn) => {
+  const onSubmit = async (values: Register) => {
     setIsLoading(true)
     try {
       await register({

@@ -1,8 +1,8 @@
-import Api from "./utils";
+import Api, { setToken } from "./utils";
 import { toast } from "react-toastify";
 
 
-const register = async ({ email, password, name }: MailSignIn) => {
+const register = async ({ email, password, name }: Register) => {
     try {
         const response = await Api.post("auth/register", { email, password, name });
         toast.info("Successfully registered !", {
@@ -25,6 +25,30 @@ const register = async ({ email, password, name }: MailSignIn) => {
 
 };
 
+const login = async (data: Login) => {
+    try {
+        const response = await Api.post("auth/login", data);
+        toast.info("You are connected !", {
+            position: toast.POSITION.TOP_RIGHT
+        });
+        setToken(response.data.result.token.access_token);
+    } catch (e: any) {
+        if (e.response.status == 401) {
+            toast.error("Check your credentials !", {
+                position: toast.POSITION.TOP_RIGHT
+            });
+            throw new Error("already_registered");
+
+        } else {
+            toast.error("Server Error !", {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        }
+    }
+
+};
+
 export {
     register,
+    login
 }

@@ -15,6 +15,9 @@ const Api = axios.create({ baseURL: BASE_URL });
 Api.defaults.timeout = 25000;
 Api.interceptors.request.use(authInterceptor);
 
+export const setToken = (token: string) => {
+    localStorage.setItem('token', token);
+}
 
 
 export default Api;
