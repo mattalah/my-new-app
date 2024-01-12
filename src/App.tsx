@@ -1,23 +1,33 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { routes } from "Config/routes";
-import { SignInPage } from "Pages/SignInPage";
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-import './App.css'
-import { ErrorPage } from "Pages/ErrorPage";
 import { useMemo } from "react";
-import { ArticlePage } from "Pages/ArticlePage";
-import { SharedLayout } from "Layout/SharedLayout";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { SignInPage } from "Pages/SignInPage";
+import { ErrorPage } from "Pages/ErrorPage";
 import { RegisterPage } from "Pages/RegisterPage";
+import { ArticlePage } from "Pages/ArticlePage";
+
+import { SharedLayout } from "Layout/SharedLayout";
 import { AuthLayout } from "Layout/AuthLayout";
+
+import { routes } from "Config/routes";
+
+import './App.css'
+import { ConfigPage } from "Pages/ConfigPage";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const routeList = useMemo(() => [{
-    path: routes.articles,
-    component: <ArticlePage />
-  }
+  const routeList = useMemo(() => [
+    {
+      path: routes.articles,
+      component: <ArticlePage />
+    },
+    {
+      path: routes.configs,
+      component: <ConfigPage />
+    }
   ], [])
   const routeAuthList = useMemo(() => [{
     path: routes.signIn,

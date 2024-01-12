@@ -48,6 +48,20 @@ const login = async (data: Login) => {
 
 };
 
+const updateProfile = async ({ email, password, name, id }: User) => {
+    try {
+        const response = await Api.put(`profile/${id}`, { email, password, name });
+        toast.info("Successfully updated !", {
+            position: toast.POSITION.TOP_RIGHT
+        });
+        return response.data;
+    } catch (e: any) {
+        toast.error("Server Error !", {
+            position: toast.POSITION.TOP_RIGHT
+        });
+    }
+
+};
 export {
     register,
     login

@@ -1,20 +1,25 @@
+import { useMemo } from "react";
 import { NavLink } from "react-router-dom";
 
 interface PaginatorComponentProps {
-    // statusCode: string;
-    // title: string;
-    total: number;
-    to: number;
-    from: number;
-    links?: {
-        link: () => string;
-        number: number;
-        isActive: boolean
-    }[]
+    meta: any;
+    searchParams: any;
+    page: string;
 }
 
-export const PaginatorComponent: React.FC<PaginatorComponentProps | undefined> = (data) => {
-    return (!data ? null : <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+export const PaginatorComponent: React.FC<PaginatorComponentProps> = ({ meta, page, searchParams }) => {
+
+    const links = useMemo(() => meta ? [...Array(meta.last_page)].map((_, index) => ({
+        link: () => {
+            const res = new URLSearchParams([...searchParams])
+            res.set('page', (index + 1).toString())
+            return `${page}?${res.toString()}`;
+        },
+        number: index + 1,
+        isActive: index + 1 == meta.current_page
+    })) : [], [meta, searchParams]);
+
+    return (!meta ? null : <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
         <div className="flex flex-1 justify-between sm:hidden">
             <a href="#" className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
             <a href="#" className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
@@ -23,11 +28,11 @@ export const PaginatorComponent: React.FC<PaginatorComponentProps | undefined> =
             <div className="mr-4">
                 <p className="flex gap-1 text-sm text-gray-700 ">
                     <span>Showing</span>
-                    <span className="font-medium">{data.from}</span>
+                    <span className="font-medium">{meta.from}</span>
                     to
-                    <span className="font-medium">{data.to}</span>
+                    <span className="font-medium">{meta.to}</span>
                     of
-                    <span className="font-medium">{data.total}</span>
+                    <span className="font-medium">{meta.total}</span>
                     <span>results</span>
                 </p>
             </div>
@@ -40,7 +45,7 @@ export const PaginatorComponent: React.FC<PaginatorComponentProps | undefined> =
                         </svg>
                     </a>
 
-                    {data.links?.map((link: any) =>
+                    {links?.map((link: any) =>
                         <NavLink key={link.number} to={link.link()} className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset   focus:z-20  ${link.isActive ? 'z-10 bg-indigo-600 text-white focus-visible:outline-indigo-600 focus-visible:outline-offset-2 focus-visible:outline-2 focus-visible:outline' : ' ring-gray-300 text-gray-900 hover:bg-gray-50 focus:outline-offset-0'}`}>{link.number}</NavLink>
 
                     )}
