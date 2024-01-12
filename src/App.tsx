@@ -5,28 +5,40 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import './App.css'
 import { ErrorPage } from "Pages/ErrorPage";
 import { useMemo } from "react";
-import { ArticlePage, ArticleDetailPage } from "Pages/ArticlePage";
-import { SharedLayout } from "SharedLayout";
+import { ArticlePage } from "Pages/ArticlePage";
+import { SharedLayout } from "Layout/SharedLayout";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RegisterPage } from "Pages/RegisterPage";
+import { AuthLayout } from "Layout/AuthLayout";
 
 const queryClient = new QueryClient();
 
 function App() {
   const routeList = useMemo(() => [{
     path: routes.articles,
-    component: <ArticlePage />,
-    errorBoundary: true
+    component: <ArticlePage />
+  }
+  ], [])
+  const routeAuthList = useMemo(() => [{
+    path: routes.signIn,
+    component: <SignInPage />
   }, {
-    path: `${routes.articleDetails}/:id`,
-    component: <ArticleDetailPage />,
-    errorBoundary: true
+    path: routes.register,
+    component: <RegisterPage />
   },
   ], [])
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path={routes.signIn} element={<SignInPage />} />
+          <Route element={<AuthLayout />}>
+            {routeAuthList.map(route =>
+              <Route path={route.path}
+                key={route.path}
+                element={route.component}
+              />
+            )}
+          </Route>
           <Route path="*"
             element={
               <ErrorPage
