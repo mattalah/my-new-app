@@ -26,6 +26,7 @@
   "include": [
     "src",
     "types/*/*",
+    "types/*",
     "./node_modules/@types"
   ],
   "references": [

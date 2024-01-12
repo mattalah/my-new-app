@@ -81,7 +81,7 @@ export const RegisterPage = (): JSX.Element => {
               wrapperStyle={{}}
 
             />
-            <div className={` ${isLoading ? 'hidden' : null} flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8`}>
+            <div className={`${isLoading ? 'hidden' : 'flex'} min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8`}>
 
               <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <NewspaperIcon className="h-20 w-20 mx-auto sm:w-full sm:max-w-sm" />
