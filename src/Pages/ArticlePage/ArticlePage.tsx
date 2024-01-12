@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArticleComponent } from "Components/ArticleComponent"
-import { PaginationComponent } from "Components/PaginationComponent"
+import { FilterComponent } from "Components/FilterComponent";
+import { PaginatorComponent } from "Components/PaginatorComponent"
 import { SearchComponent } from "Components/SearchComponent";
+import { categories } from "Config/constant";
 import { getArticle } from "Service/ArticleService";
 
 export const ArticlePage = () => {
@@ -20,12 +22,16 @@ export const ArticlePage = () => {
         }];
     return <div>
         <SearchComponent />
-        <div className="flex items-center justify-center min-h-screen container mx-auto">
+        <div className="flex justify-end text-xs md:text-sm gap-4 py-5 mx-auto max-w-6xl flex-wrap">
+            {categories.map(category => <FilterComponent {...{ category }} key={category} />
+            )}
+        </div>
+
+        <div className="flex justify-around items-center min-h-screen container mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {isLoading ? "loading" : data.data.map((article: Article) => <ArticleComponent {...{ article }} key={article.id} />)}
             </div>
         </div >
-        <PaginationComponent total={20} to={15} from={15} {...{ links }} />
-
+        <PaginatorComponent total={20} to={15} from={15} {...{ links }} />
     </div >
 }
