@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 import { Oval } from "react-loader-spinner";
@@ -97,35 +97,32 @@ export const ArticlePage = () => {
 
 
     return (
+
         <div>
             <SearchComponent />
-            <div className="relative min-h-screen md:flex flex-row">
-                {/* mobile menu bar  */}
-                <div className="flex flex-row md:hidden">
+            <div className="relative min-h-screen flex md:flex-row flex-col">
+                <div className="flex md:flex-col sm:flex-row mt-4 border-t border-gray-200 sidebar md:py-7 md:px-2">
                     <FilterComponent {...{ filters, handleValueChange }} />
                 </div>
-                {/* side menu webpage  */}
-                <div className="md:visible sm:hidden mt-4 border-t border-gray-200 sidebar w-64 space-y-6 py-7 px-2 inset-y-0 left-0 transform -translate-x-full relative md:translate-x-0 transition duration-200 ease-in-out">
-                    <FilterComponent {...{ filters, handleValueChange }} />
+                <div className="flex flex-col w-full md:w-4/5 justify-center mx-auto">
+                    {isLoading ? (
+                        <Oval
+                            visible={isLoading}
+                            wrapperClass="flex justify-center items-center"
+                            height="80"
+                            width="80"
+                            color="#805ad5"
+                            secondaryColor="#D8D7D7"
+                            ariaLabel="oval-loading"
+                        />
+                    ) : (
+                        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {data?.data.map((article: Article) => (
+                                <ArticleComponent {...{ article }} key={article.id} />
+                            ))}
+                        </div>
+                    )}
                 </div>
-                {/* component articles */}
-                <div className="flex pl-30 text-xl font-bold">
-                    <div className="grid lg:grid-cols-4 sm:grid-cols-2">
-                        {isLoading
-                            ? <Oval
-                                visible={isLoading}
-                                wrapperClass="-z-1 flex justify-center items-center"
-                                height="80"
-                                width="80"
-                                color="#805ad5"
-                                secondaryColor="#D8D7D7"
-                                ariaLabel="oval-loading"
-                                wrapperStyle={{}}
-                            />
-                            : data?.data.map((article: Article) => <ArticleComponent {...{ article }} key={article.id} />)
-                        }
-                    </div >
-                </div >
             </div>
             <PaginatorComponent meta={data?.meta} page={routes.articles} {...{ searchParams }} />
         </div>
