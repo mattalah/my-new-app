@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Oval } from "react-loader-spinner";
 import { useSearchParams } from "react-router-dom";
@@ -27,13 +27,13 @@ export const ArticlePage: React.FC = () => {
             id: 'category',
             name: 'Category',
             type: 'checkbox',
-            options: categories.map(val => ({ value: val, label: val, checked: false })),
+            options: categories.map(({ value, label }) => ({ value, label, checked: false })),
         },
         {
             id: 'source',
             name: 'Source',
             type: 'checkbox',
-            options: sources.map(val => ({ value: val, label: val, checked: false })),
+            options: sources.map(({ value, label }) => ({ value, label, checked: false })),
         },
     ]);
     const [searchParams, setSearchParams] = useSearchParams();
@@ -50,29 +50,33 @@ export const ArticlePage: React.FC = () => {
                 setIsLoading(false);
             }
         };
-
         fetchData();
+        updatedFilters(searchParams);
     }, [searchParams]);
 
-    const handleValueChange = (value: any, id: string, type: string) => {
-        const updatedFilters = filters.map(filter => {
-            if (filter.id === id) {
-                return {
-                    ...filter,
-                    options: filter.options?.map(option => ({
-                        ...option,
-                        checked: option.label === value,
-                    })),
-                    value: type === "date" && value
-                };
-            }
-            return filter;
-        });
-        setFilters(updatedFilters);
+    const updatedFilters = useCallback((searchParams: any) => setFilters(filters.map(filter => ({
+        ...filter,
+        value: filter.type === "date" ? searchParams.get(filter.id) : filter.value,
+        options: filter.type === "checkbox" ? filter.options?.map(option => ({
+            ...option,
+            checked: searchParams.has(filter.id, option.value),
+        })) : filter.options,
+    }))), [])
 
+
+
+    const handleValueChange = (value: any, id: string, type: string) => {
         const updatedSearchParams = new URLSearchParams(searchParams);
-        if (value) updatedSearchParams.set(id, value);
-        else updatedSearchParams.delete(id)
+        if (!value || (type === "checkbox" && updatedSearchParams.has(id, value))) {
+            updatedSearchParams.delete(id, value);
+        }
+        else {
+            if (type === "checkbox") {
+                updatedSearchParams.append(id, value);
+            } else {
+                updatedSearchParams.set(id, value);
+            }
+        }
         setSearchParams(updatedSearchParams);
     };
 
